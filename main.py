@@ -1,10 +1,5 @@
-from pyrogram import Client, filters, idle
-import logging
+from pyrogram import Client, idle
 from config import API_ID, API_HASH, BOT_TOKEN
-from modules import all_features
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 bot = Client(
     "anime_lord_bot",
@@ -13,11 +8,11 @@ bot = Client(
     bot_token=BOT_TOKEN
 )
 
-# Register all handlers
-all_features.register_handlers(bot)
+# Import all handlers (auto-register via decorators)
+import modules.all_features
 
 if __name__ == "__main__":
     bot.start()
-    print("Bot is up and running...")
+    print("Bot is running...")
     idle()
     bot.stop()
