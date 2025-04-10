@@ -1,5 +1,3 @@
-# modules/all_features.py
-
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 from utils.formatting import make_button, stylize_text
@@ -154,15 +152,3 @@ async def channel_logs(client, message: Message):
 @Client.on_message(filters.command("styled"))
 async def styled_text(client, message: Message):
     await message.reply_text(stylize_text("This is a styled message from Anime Lord Bot."))
-
-
-def register_handlers(bot):
-    @bot.on_message(filters.command("start"))
-    async def start_command(client, message):
-        await message.reply_text("Anime Lord bot is now alive!")
-
-    # এখানেই বাকি command গুলো যোগ করতে থাকুন
-    # উদাহরণ:
-    @bot.on_message(filters.command("help"))
-    async def help_command(client, message):
-        await message.reply_text("এই বটে অনেক ফিচার আছে! /start দিয়ে শুরু করুন।")
