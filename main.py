@@ -1,34 +1,31 @@
 from pyrogram import Client, filters
+from flask import Flask, request
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
+API_ID = int(os.environ.get("API_ID"))
+API_HASH = os.environ.get("API_HASH")
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
 
-API_ID = int(os.getenv("API_ID"))
-API_HASH = os.getenv("API_HASH")
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+app = Flask(__name__)
+bot = Client("anime_lord", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
-app = Client("AnimeLordBot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
+WEBHOOK_URL = "https://anime-lord.koyeb.app"
 
-# === Import all command handlers directly ===
-from modules.all_features import *
+@app.route(f"/{BOT_TOKEN}", methods=["POST"])
+def webhook():
+    bot.process_update(request.stream.read())
+    return "OK"
 
-# === Web health check setup ===
-import threading
-from http.server import BaseHTTPRequestHandler, HTTPServer
-
-class HealthHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(b"Bot is running.")
-
-def run_server():
-    server = HTTPServer(('0.0.0.0', 8080), HealthHandler)
-    server.serve_forever()
-
-threading.Thread(target=run_server, daemon=True).start()
+@app.route("/", methods=["GET"])
+def root():
+    return "Bot Running (Webhook Mode)"
 
 if __name__ == "__main__":
-    print("Bot is starting...")
-    app.run()
+    import uvicorn
+
+    # Telegram এর webhook সেট করা
+    with bot:
+        bot.set_webhook(url=f"{WEBHOOK_URL}/{BOT_TOKEN}")
+    
+    # Flask app চালানো
+    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
