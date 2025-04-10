@@ -1,7 +1,7 @@
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 # ফন্ট স্টাইল (Anime Lord স্টাইল)
-def stylize(text: str) -> str:
+def stylize_text(text: str) -> str:
     fancy_font_map = str.maketrans(
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
         "ᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -19,10 +19,20 @@ def format_text(text: str, style: str = "bold") -> str:
     else:
         return text
 
-# ইনলাইন বাটন জেনারেটর
+# একক ইনলাইন বাটন (text, url দিয়ে)
+def make_button(text: str, url: str) -> InlineKeyboardButton:
+    return InlineKeyboardButton(text=text, url=url)
+
+# মাল্টি বাটন ইনলাইন কিবোর্ড (list of rows)
 def create_buttons(buttons: list) -> InlineKeyboardMarkup:
     keyboard = []
     for row in buttons:
-        btn_row = [InlineKeyboardButton(text=btn["text"], url=btn.get("url", ""), callback_data=btn.get("callback")) for btn in row]
+        btn_row = [
+            InlineKeyboardButton(
+                text=btn["text"],
+                url=btn.get("url", ""),
+                callback_data=btn.get("callback")
+            ) for btn in row
+        ]
         keyboard.append(btn_row)
     return InlineKeyboardMarkup(keyboard)
