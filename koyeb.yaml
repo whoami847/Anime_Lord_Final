@@ -1,0 +1,19 @@
+name: anime-lord-bot
+
+services:
+  - name: bot
+    dockerfile_path: ./Dockerfile
+    build_dir: .
+    routes:
+      - name: no-healthcheck
+        port: 8080
+        protocol: tcp
+        healthcheck:
+          enabled: false
+    envs:
+      - key: BOT_TOKEN
+        value: ${BOT_TOKEN}
+      - key: API_ID
+        value: ${API_ID}
+      - key: API_HASH
+        value: ${API_HASH}
