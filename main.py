@@ -13,7 +13,7 @@ bot = Client(
     bot_token=BOT_TOKEN
 )
 
-# Register all handlers from all_features module
+# Register all handlers
 all_features.register_handlers(bot)
 
 if __name__ == "__main__":
