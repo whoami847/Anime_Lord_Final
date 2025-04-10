@@ -1,19 +1,23 @@
-import asyncio
-from pyrogram import Client
-import os
+from pyrogram import Client, filters, idle
+import logging
+from config import API_ID, API_HASH, BOT_TOKEN
+from modules import all_features
 
-API_ID = int(os.environ.get("API_ID"))
-API_HASH = os.environ.get("API_HASH")
-BOT_TOKEN = os.environ.get("BOT_TOKEN")
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-app = Client("anime_lord_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
+bot = Client(
+    "anime_lord_bot",
+    api_id=API_ID,
+    api_hash=API_HASH,
+    bot_token=BOT_TOKEN
+)
 
-async def start_bot():
-    await app.start()
-    print("Bot started. Running...")
-    await idle()
-    await app.stop()
+# Register all handlers from all_features module
+all_features.register_handlers(bot)
 
 if __name__ == "__main__":
-    from pyrogram.idle import idle
-    asyncio.run(start_bot())
+    bot.start()
+    print("Bot is up and running...")
+    idle()
+    bot.stop()
